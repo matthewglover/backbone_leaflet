@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'backbone-on-rails'
 
+gem 'factual-api'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

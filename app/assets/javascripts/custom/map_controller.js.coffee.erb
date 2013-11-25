@@ -15,6 +15,7 @@ class BackboneLeaflet.Custom.MapController
     @addMarker([@options.latitude, @options.longitude])
 
   createMap: ->
+    console.log("Lat: #{@options.latitude} Long: #{@options.longitude}")
     @base = L.map('map').setView([@options.latitude, @options.longitude], @options.zoom);
     L.tileLayer('http://{s}.tile.cloudmade.com/ceda08740383477f8dbb3bed2e9c2a47/997/256/{z}/{x}/{y}.png',
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
