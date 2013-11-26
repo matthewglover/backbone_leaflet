@@ -14,5 +14,4 @@ class BackboneLeaflet.Views.Place extends Backbone.View
     @
 
   toggleMap: ->
-    console.log(@model.get('name'))
     @model.toggleShowOnMap()

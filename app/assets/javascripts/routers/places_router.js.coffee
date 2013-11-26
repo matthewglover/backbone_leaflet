@@ -13,3 +13,4 @@ class BackboneLeaflet.Routers.Places extends Backbone.Router
 
   onFindLocation: (lat_lng)=>
     @map_controller = new BackboneLeaflet.Custom.MapController(coords: lat_lng, collection: @places_collection)
+    @places_collection.setLocation(lat_lng.latitude, lat_lng.longitude)

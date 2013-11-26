@@ -1,4 +1,8 @@
-List View Index Loaded!
+<form id="new_location">
+  <input type="text" name="latitude" id="new_latitude" value="52.289623" />
+  <input type="text" name="longitude" id="new_longitude" value="-1.538605" />
+  <input type="submit" value="go" />
+</form>
 
 <ul id="PlaceList">
 </ul>

@@ -12,24 +12,38 @@ class BackboneLeaflet.Custom.MapController
   constructor: (options)->
     @loadDefaults(options)
     @buildMap()
-    @setListeners()
-    current_location = @addMarker([@options.coords.latitude, @options.coords.longitude])
-    current_location.bindPopup("You are here!")
 
   loadDefaults: (options)->
     @options = _.defaults(options, @default_options)
 
   buildMap: ->
-    @base = L.map('map').setView([@options.coords.latitude, @options.coords.longitude], @options.zoom)
+    @setMapLocation()
     L.tileLayer('http://{s}.tile.cloudmade.com/ceda08740383477f8dbb3bed2e9c2a47/997/256/{z}/{x}/{y}.png',
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
       maxZoom: 18).addTo(@base)
 
+  setMapLocation: (latitude, longitude, zoom)->
+    latitude = @options.coords.latitude unless latitude?
+    longitude = @options.coords.longitude unless longitude?
+    zoom = @options.zoom unless zoom?
+    if @base?
+      @base.setView([latitude, longitude], zoom)
+    else
+      @base = L.map('map').setView([latitude, longitude], zoom)
+
+    current_location = @addMarker([latitude, longitude])
+    current_location.bindPopup("You are here!")
+    @setListeners()
+
   setListeners: ->
+    console.log('setting listeners!!')
     @_places_array = []
     @options.collection.each (model)=>
+      console.log('loading model')
       @listenTo(model, 'change', @togglePlace)
       @_places_array.push({place: model, is_on: false})
+
+    @listenTo(@options.collection, 'changeLocation', @setMapLocation)
 
   baseIcon: ->
     return @_base_icon if @_base_icon?
@@ -49,6 +63,7 @@ class BackboneLeaflet.Custom.MapController
     marker
 
   togglePlace: (place)->
+    console.log('toggling place')
     obj = _.find(@_places_array, (obj)-> return obj.place == place)
     if (obj.is_on)
       obj.is_on = false
