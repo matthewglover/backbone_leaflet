@@ -1,0 +1,17 @@
+class BackboneLeaflet.Views.PlacesMap extends Backbone.View
+
+  initialize: ->
+    @listenTo(@collection, 'reset', @setMapPlaces)
+    @listenTo(@collection, 'setLocation', @setMapView)
+
+  setMapPlaces: =>
+    @collection.each(@appendPlace)
+
+  appendPlace: (place)=>
+    place = new BackboneLeaflet.Views.MapPlace(model: place, map: @map)
+
+  setMapView: (latitude, longitude)->
+    if @map?
+      @map.setView(latitude, longitude, home_marker: true)
+    else
+      @map = new BackboneLeaflet.Custom.Map(latitude, longitude, home_marker: true)

@@ -10,10 +10,10 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
 
   render: ->
     $(@el).html(@template())
-    @collection.each(@appendEntry)
+    @collection.each(@appendPlace)
     @
 
-  appendEntry: (place)->
+  appendPlace: (place)->
     place = new BackboneLeaflet.Views.Place(model: place)
     @$('#PlaceList').append(place.render().el)
 

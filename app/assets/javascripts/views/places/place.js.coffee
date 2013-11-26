@@ -4,14 +4,13 @@ class BackboneLeaflet.Views.Place extends Backbone.View
   tagName: 'li'
 
   events:
-    'click .showHide': 'toggleMap'
+    'click .showHide': 'toggleShow'
 
   initialize: ->
-    # console.log(@model.get('factual_id') + " " + @model.get('name'))
 
   render: ->
     $(@el).html(@template(place: @model))
     @
 
-  toggleMap: ->
-    @model.toggleShowOnMap()
+  toggleShow: ->
+    @model.toggleShow()
