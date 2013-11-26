@@ -3,20 +3,5 @@
 <div id="map">Loading Map...</div>
 
 <div id="list">
-  <% if @factual && @factual.rows %>
-   <table>
-      <tr>
-        <th>Name</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-      </tr>
-      <% @factual.rows.each do |place| %>
-        <tr>
-          <td><%= place['name'] %></td>
-          <td><%= place['latitude'] %></td>
-          <td><%= place['longitude'] %></td>
-        </tr>
-      <% end %>
-   </table>
-  <% end %>
+  Loading List...
 </div>

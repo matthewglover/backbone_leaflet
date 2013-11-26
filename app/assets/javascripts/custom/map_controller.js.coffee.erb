@@ -4,25 +4,36 @@ class BackboneLeaflet.Custom.MapController
   _.extend @prototype, Backbone.Events
 
   default_options:
-    latitude: 48.89364
-    longitude: 2.33739
+    coords:
+      latitude: 48.89364
+      longitude: 2.33739
     zoom: 15
 
   constructor: (options)->
-    @options = _.defaults(options, @default_options)
-    @createBaseIcon()
-    @createMap()
-    @addMarker([@options.latitude, @options.longitude])
+    @loadDefaults(options)
+    @buildMap()
+    @setListeners()
+    current_location = @addMarker([@options.coords.latitude, @options.coords.longitude])
+    current_location.bindPopup("You are here!")
 
-  createMap: ->
-    console.log("Lat: #{@options.latitude} Long: #{@options.longitude}")
-    @base = L.map('map').setView([@options.latitude, @options.longitude], @options.zoom);
+  loadDefaults: (options)->
+    @options = _.defaults(options, @default_options)
+
+  buildMap: ->
+    @base = L.map('map').setView([@options.coords.latitude, @options.coords.longitude], @options.zoom)
     L.tileLayer('http://{s}.tile.cloudmade.com/ceda08740383477f8dbb3bed2e9c2a47/997/256/{z}/{x}/{y}.png',
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
       maxZoom: 18).addTo(@base)
 
-  createBaseIcon: ->
-    @base_icon = L.icon(
+  setListeners: ->
+    @_places_array = []
+    @options.collection.each (model)=>
+      @listenTo(model, 'change', @togglePlace)
+      @_places_array.push({place: model, is_on: false})
+
+  baseIcon: ->
+    return @_base_icon if @_base_icon?
+    @_base_icon = L.icon(
       iconUrl: "<%= asset_path('marker-icon.png') %>"
       retinaUrl: "<%= asset_path('marker-icon-2x.png') %>"
       shadowUrl: "<%= asset_path('marker-shadow.png') %>"
@@ -32,5 +43,17 @@ class BackboneLeaflet.Custom.MapController
       shadowSize: [41, 41])
 
   addMarker: (lat_long, icon=null)->
-    icon ?= @base_icon
-    L.marker(lat_long, {icon: icon}).addTo(@base)
+    icon ?= @baseIcon()
+    marker = L.marker(lat_long, {icon: icon})
+    @base.addLayer(marker)
+    marker
+
+  togglePlace: (place)->
+    obj = _.find(@_places_array, (obj)-> return obj.place == place)
+    if (obj.is_on)
+      obj.is_on = false
+      @base.removeLayer(obj.marker)
+    else
+      obj.marker = @addMarker([place.get('latitude'), place.get('longitude')])
+      obj.marker.bindPopup("#{obj.place.get('name')}")
+      obj.is_on = true

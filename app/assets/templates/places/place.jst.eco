@@ -1,0 +1,3 @@
+Name: <%= @place.get('name') %>
+
+<button class="showHide">show/hide</button>
