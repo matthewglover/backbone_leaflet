@@ -19,6 +19,9 @@ class BackboneLeaflet.Custom.Map
   removeMarker: (marker)->
     @base.removeLayer(marker)
 
+  bindPopup: (marker, content)->
+    marker.bindPopup(content)
+
   _buildMap: (latitude, longitude)->
     @base = L.map('map').setView([latitude, longitude], @zoom)
     L.tileLayer('http://{s}.tile.cloudmade.com/ceda08740383477f8dbb3bed2e9c2a47/997/256/{z}/{x}/{y}.png',
@@ -27,7 +30,7 @@ class BackboneLeaflet.Custom.Map
 
   _setHomeMarker: (latitude, longitude)->
     current_location = @addMarker(latitude, longitude)
-    current_location.bindPopup("You are here!")
+    @bindPopup(current_location, "You are here!")
 
   _baseIcon: ->
     return @_base_icon if @_base_icon?

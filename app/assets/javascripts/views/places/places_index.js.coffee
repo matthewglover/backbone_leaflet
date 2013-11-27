@@ -4,11 +4,14 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
 
   events:
     'submit #new_location': 'changeLocation'
+    'click #more': 'loadMore'
+    'click #check_total': 'checkTotal'
 
   initialize: ->
-    @listenTo(@collection, 'reset', @render)
+    @listenTo(@collection, 'sync', @render)
 
   render: ->
+    console.log('Rendering full list...')
     $(@el).html(@template())
     @collection.each(@appendPlace)
     @
@@ -22,4 +25,11 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
     lat = $('#new_latitude').val()
     long = $('#new_longitude').val()
     @collection.setLocation(lat,long)
-    console.log('change location')
+
+  loadMore: (event)=>
+    event.preventDefault()
+    @collection.fetchMore()
+
+  checkTotal: (event)=>
+    event.preventDefault()
+    console.log("No items = #{@collection.length}")

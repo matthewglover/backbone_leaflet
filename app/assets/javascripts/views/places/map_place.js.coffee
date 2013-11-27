@@ -7,5 +7,6 @@ class BackboneLeaflet.Views.MapPlace extends Backbone.View
   toggleShow: =>
     if @model.get('show')
       @marker = @map.addMarker(@model.get('latitude'), @model.get('longitude'))
+      @map.bindPopup(@marker, @model.get('name'))
     else
       @map.removeMarker(@marker)
