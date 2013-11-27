@@ -26,6 +26,10 @@ gem 'backbone-on-rails'
 
 gem 'factual-api'
 
+group :development do
+  gem 'coffee-rails-source-maps'
+end
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

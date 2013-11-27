@@ -31,3 +31,6 @@
 .project
 .DS_Store
 .idea
+
+# Ignore asset source maps
+/public/assets/source_maps/
