@@ -1,17 +1,31 @@
 class BackboneLeaflet.Views.PlacesMap extends Backbone.View
 
   initialize: ->
-    @listenTo(@collection, 'sync', @setMapPlaces)
-    @listenTo(@collection, 'setLocation', @setMapView)
+    @listenTo(@collection, 'sync', @_addViews)
+    @listenTo(@collection, 'setLocation', @_setMapView)
 
-  setMapPlaces: =>
-    @collection.each(@appendPlace)
+  _addViews: =>
+    @collection.each(@_addView)
 
-  appendPlace: (place)=>
-    place = new BackboneLeaflet.Views.MapPlace(model: place, map: @map)
+  _addView: (model)=>
+    unless _.findWhere(@_views(), model: model)
+      view = new BackboneLeaflet.Views.MapPlace(model: model, map: @map)
+      @_views().push(view)
 
-  setMapView: (latitude, longitude)->
+  _setMapView: (latitude, longitude)->
+    @_killViews()
     if @map?
       @map.setView(latitude, longitude, home_marker: true)
     else
       @map = new BackboneLeaflet.Custom.Map(latitude, longitude, home_marker: true)
+
+  _killViews: ->
+    @_killView _.first(@_views()) while @_views().length > 0
+
+  _killView: (view)->
+    if view?
+      view.remove()
+      @_views(_.without @_views(), view)
+
+  _views: (ary=false)->
+    if ary then @__view_array = ary else @__view_array ?= []

@@ -19,7 +19,7 @@ class FactualApi
     query  = query.geo("$circle" => {"$center" => [latitude, longitude], "$meters" => diameter})
     query = query.search(search)
     query  = query.sort('name')
-    query = query.page(page, per: 50)
+    query = query.page(page, per: 5)
     @rows = query.rows
   end
 

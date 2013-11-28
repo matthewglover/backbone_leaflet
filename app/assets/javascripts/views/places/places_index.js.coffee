@@ -8,17 +8,23 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
     'click #check_total': 'checkTotal'
 
   initialize: ->
-    @listenTo(@collection, 'sync', @render)
+    @listenTo(@collection, 'sync', @_addViews)
+    @listenTo(@collection, 'setLocation', @_killViews)
 
   render: ->
-    console.log('Rendering full list...')
-    $(@el).html(@template())
-    @collection.each(@appendPlace)
+    @$el.html(@template()) unless @rendered?
+    @rendered = true
     @
 
-  appendPlace: (place)->
-    place = new BackboneLeaflet.Views.Place(model: place)
-    @$('#PlaceList').append(place.render().el)
+  _addViews: =>
+    @render()
+    @collection.each(@_addView)
+
+  _addView: (model)=>
+    unless _.findWhere(@_views(), model: model)
+      view = new BackboneLeaflet.Views.Place(model: model)
+      @_views().push(view)
+      @$('#PlaceList').append(view.render().el)
 
   changeLocation: (event)=>
     event.preventDefault()
@@ -32,4 +38,15 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
 
   checkTotal: (event)=>
     event.preventDefault()
-    console.log("No items = #{@collection.length}")
+    console.log("No ims = #{@collection.length}")
+
+  _killViews: ->
+    @_killView _.first(@_views()) while @_views().length > 0
+
+  _killView: (view)->
+    if view?
+      view.remove()
+      @_views(_.without @_views(), view)
+
+  _views: (ary=false)->
+    if ary then @__view_array = ary else @__view_array ?= []

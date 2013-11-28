@@ -9,13 +9,11 @@ class BackboneLeaflet.Views.Place extends Backbone.View
   initialize: ->
 
   render: ->
-    console.log(@model.get('show'))
     @$el.html(@template(place: @model))
     @$el.removeClass("show")
     @$el.addClass("show") if @model.get('show')
     @
 
   toggleShow: ->
-    console.log('toggling - ' + @model.get('show'))
     @model.toggleShow()
     @render()

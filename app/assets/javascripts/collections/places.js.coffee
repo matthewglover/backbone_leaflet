@@ -10,6 +10,7 @@ class BackboneLeaflet.Collections.Places extends Backbone.Collection
     @longitude = longitude
     @page = 1
     @trigger('setLocation', @latitude, @longitude)
+    @reset()
     @_fetchData()
 
   fetchMore: ->
