@@ -11,3 +11,5 @@ window.BackboneLeaflet =
 
 $(document).ready ->
   BackboneLeaflet.initialize()
+  window.geocoder = new BackboneLeaflet.Custom.Geocoder()
+  window.geocoder.geocode('18 Ainsley Street, London')

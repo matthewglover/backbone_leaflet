@@ -16,6 +16,7 @@
 //= require underscore
 //= require backbone
 //= require backbone_leaflet
+//= require jquery.dstk
 //= require_tree ../templates
 //= require_tree ./models
 //= require_tree ./collections

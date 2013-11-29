@@ -10,3 +10,7 @@ class BackboneLeaflet.Views.MapPlace extends Backbone.View
       @map.bindPopup(@marker, @model.get('name'))
     else
       @map.removeMarker(@marker)
+
+  remove: ->
+    @map.removeMarker(@marker) if @marker?
+    super()
