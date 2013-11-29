@@ -1,4 +1,5 @@
 class BackboneLeaflet.Custom.Map
+  _.extend @prototype, Backbone.Events
 
   zoom: 15
 
@@ -12,7 +13,7 @@ class BackboneLeaflet.Custom.Map
 
   addMarker: (latitude, longitude, icon=null)->
     icon ?= @_baseIcon()
-    marker = L.marker([latitude, longitude], {icon: icon})
+    marker = L.marker([latitude, longitude], {icon: icon, draggable: true})
     @base.addLayer(marker)
     marker
 
@@ -29,8 +30,9 @@ class BackboneLeaflet.Custom.Map
       maxZoom: 18).addTo(@base)
 
   _setHomeMarker: (latitude, longitude)->
-    current_location = @addMarker(latitude, longitude)
-    @bindPopup(current_location, "You are here!")
+    @removeMarker(@current_location) if @current_location?
+    @current_location = @addMarker(latitude, longitude)
+    @current_location.addEventListener('dragend', @_onHomeDrag)
 
   _baseIcon: ->
     return @_base_icon if @_base_icon?
@@ -42,3 +44,9 @@ class BackboneLeaflet.Custom.Map
       iconAnchor: [12, 41]
       popupAnchor: [1, -34]
       shadowSize: [41, 41])
+
+  _onHomeDrag: (event)=>
+    # console.log  "#{key} - #{value}" for key, value of event.target
+    marker = event.target
+    lat_lng = [marker.getLatLng().lat, marker.getLatLng().lng]
+    BackboneLeaflet.Events.trigger("homeDragged", marker.getLatLng().lat, marker.getLatLng().lng)

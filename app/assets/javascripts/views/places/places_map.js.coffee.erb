@@ -23,9 +23,8 @@ class BackboneLeaflet.Views.PlacesMap extends Backbone.View
     @_killView _.first(@_views()) while @_views().length > 0
 
   _killView: (view)->
-    if view?
-      view.remove()
-      @_views(_.without @_views(), view)
+    view.remove() if view?
+    @_views(_.without @_views(), view)
 
   _views: (ary=false)->
     if ary then @__view_array = ary else @__view_array ?= []

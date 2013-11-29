@@ -5,11 +5,11 @@ window.BackboneLeaflet =
   Routers: {}
   Custom: {}
 
+  Events: _.extend({}, Backbone.Events)
+
   initialize: ->
     new BackboneLeaflet.Routers.Places
     Backbone.history.start()
 
 $(document).ready ->
   BackboneLeaflet.initialize()
-  window.geocoder = new BackboneLeaflet.Custom.Geocoder()
-  window.geocoder.geocode('18 Ainsley Street, London')

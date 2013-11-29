@@ -3,34 +3,37 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
   template: JST['places/index']
 
   events:
-    'submit #new_location': 'changeLocation'
     'click #more': 'loadMore'
     'click #check_total': 'checkTotal'
 
   initialize: ->
+    @render()
+    @_addGecoderView()
     @listenTo(@collection, 'sync', @_addViews)
     @listenTo(@collection, 'setLocation', @_killViews)
+    @listenTo(BackboneLeaflet.Events, 'homeDragged', @setLocation)
 
   render: ->
-    @$el.html(@template()) unless @rendered?
-    @rendered = true
+    @$el.html(@template())
     @
 
+  _addGecoderView: ->
+    geocoder = new BackboneLeaflet.Collections.Geocoder()
+    view = new BackboneLeaflet.Views.Geocoder(collection: geocoder, parent_view: @)
+    @listenTo(view, 'changeLocation',@_changeLocation)
+    @$('#Geocoder').append(view.render().el)
+
+  setLocation: (latitude, longitude)->
+    @collection.setLocation(latitude,longitude)
+
   _addViews: =>
-    @render()
     @collection.each(@_addView)
 
   _addView: (model)=>
     unless _.findWhere(@_views(), model: model)
-      view = new BackboneLeaflet.Views.Place(model: model)
+      view = new BackboneLeaflet.Views.IndexPlace(model: model)
       @_views().push(view)
       @$('#PlaceList').append(view.render().el)
-
-  changeLocation: (event)=>
-    event.preventDefault()
-    lat = $('#new_latitude').val()
-    long = $('#new_longitude').val()
-    @collection.setLocation(lat,long)
 
   loadMore: (event)=>
     event.preventDefault()
@@ -39,6 +42,9 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
   checkTotal: (event)=>
     event.preventDefault()
     console.log("No ims = #{@collection.length}")
+
+  # _changeLocation: (latitude, longitude)->
+  #   @collection.setLocation(latitude,longitude)
 
   _killViews: ->
     @_killView _.first(@_views()) while @_views().length > 0
@@ -50,3 +56,4 @@ class BackboneLeaflet.Views.PlacesIndex extends Backbone.View
 
   _views: (ary=false)->
     if ary then @__view_array = ary else @__view_array ?= []
+

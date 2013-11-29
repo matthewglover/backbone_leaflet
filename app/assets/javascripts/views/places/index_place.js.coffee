@@ -1,6 +1,6 @@
-class BackboneLeaflet.Views.Place extends Backbone.View
+class BackboneLeaflet.Views.IndexPlace extends Backbone.View
 
-  template: JST['places/place']
+  template: JST['places/index_place']
   tagName: 'li'
 
   events:

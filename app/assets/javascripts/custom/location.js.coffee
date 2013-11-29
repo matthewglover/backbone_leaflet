@@ -1,5 +1,3 @@
-# location.js.coffee
-
 class BackboneLeaflet.Custom.Location
   _.extend @prototype, Backbone.Events
 
